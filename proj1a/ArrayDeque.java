@@ -1,0 +1,93 @@
+public class ArrayDeque<T> {
+    // the list is [first, last)
+    private int first, last, size;
+    private T[] items;
+
+    public ArrayDeque() {
+        items = (T[]) new Object[8];
+        first = last = 0;
+        size = 0;
+    }
+
+    private void resize(int newsize) {
+        T[] array = (T[]) new Object[newsize];
+        if (first < last) {
+            System.arraycopy(items, first, array, 0, size);
+        } else {
+            // [first, length-1]
+            System.arraycopy(items, first, array, 0, items.length - first);
+            // [0, size - (length-first) - 1]
+            System.arraycopy(items, 0, array, items.length - first, size - items.length + first);
+        }
+        first = 0;
+        last = size;
+        items = array;
+    }
+
+    public void addFirst(T item) {
+        if (size == items.length)
+            resize(2 * size);
+        size++;
+        first = (first + items.length - 1) % items.length;
+        items[first] = item;
+    }
+
+    public void addLast(T item) {
+        if (size == items.length)
+            resize(2 * size);
+        size++;
+        items[last] = item;
+        last = (last + 1) % items.length;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public void printDeque() {
+        if (size == 0)
+            return;
+        if (first < last) {
+            for (int i = first; i < last; i++)
+                System.out.print(items[i] + " ");
+        } else {
+            for (int i = first; i < items.length; i++)
+                System.out.print(items[i] + " ");
+            int t = size - items.length + first;
+            for (int i = 0; i < t; i++)
+                System.out.print(items[i] + " ");
+        }
+    }
+
+    public T removeFirst() {
+        assert (size > 0);
+        size--;
+        T ret = items[first];
+        items[first] = null;
+        first = (first + 1) % items.length;
+        if (items.length >= 16 && (double) size / items.length < 0.25)
+            resize(items.length / 2);
+        return ret;
+    }
+
+    public T removeLast() {
+        assert (size > 0);
+        size--;
+        last = (last + items.length - 1) % items.length;
+        T ret = items[last];
+        items[last] = null;
+        if (items.length >= 16 && (double) size / items.length < 0.25)
+            resize(items.length / 2);
+        return ret;
+    }
+
+    public T get(int index) {
+        assert (0 <= index && index < size);
+        index = (first + index) % items.length;
+        return items[index];
+    }
+}
