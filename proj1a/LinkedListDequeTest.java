@@ -114,10 +114,28 @@ public class LinkedListDequeTest {
 		printTestStatus(passed);
 	}
 
+	public static void removeFromEmptyTest() {
+		System.out.println("Running remove from empty deque test.");
+		LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+		boolean passed = checkEmpty(true, lld1.isEmpty());
+		for (int i = 0; i < 3; i++) {
+			lld1.removeFirst();
+			passed = checkEmpty(true, lld1.isEmpty()) && passed;
+			passed = checkSize(0, lld1.size());
+		}
+		for (int i = 0; i < 3; i++) {
+			lld1.removeLast();
+			passed = checkEmpty(true, lld1.isEmpty()) && passed;
+			passed = checkSize(0, lld1.size());
+		}
+		printTestStatus(passed);
+	}
+
 	public static void main(String[] args) {
 		System.out.println("Running tests.\n");
 		addIsEmptySizeTest();
 		addRemoveTest();
 		getTest();
+		removeFromEmptyTest();
 	}
 }

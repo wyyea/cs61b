@@ -64,7 +64,8 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst() {
-        assert (size > 0);
+        if (size <= 0)
+            return null;
         size--;
         T ret = items[first];
         items[first] = null;
@@ -75,7 +76,8 @@ public class ArrayDeque<T> {
     }
 
     public T removeLast() {
-        assert (size > 0);
+        if (size <= 0)
+            return null;
         size--;
         last = (last + items.length - 1) % items.length;
         T ret = items[last];
@@ -86,7 +88,8 @@ public class ArrayDeque<T> {
     }
 
     public T get(int index) {
-        assert (0 <= index && index < size);
+        if (index < 0 || index >= size)
+            return null;
         index = (first + index) % items.length;
         return items[index];
     }
