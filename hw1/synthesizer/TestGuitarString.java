@@ -50,6 +50,7 @@ public class TestGuitarString {
         // Check that new sample is correct, using tolerance of 0.001.
         // See JUnit documentation for a description of how tolerances work
         // for assertEquals(double, double)
+        System.out.println("s1:" + s1 + " s2:" + s2);
         assertEquals(expected, s5, 0.001);
 
     }
