@@ -89,7 +89,15 @@ public class Game implements Serializable {
     }
 
     private void SaveWorld() {
-        File f = new File("./byog/Core/game.txt");
+        File f = new File("./game.txt");
+        if (!f.exists()) {
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
         if (f.exists()) {
             try {
                 FileOutputStream fs = new FileOutputStream(f);
@@ -108,7 +116,7 @@ public class Game implements Serializable {
     }
 
     private Game LoadWorld() {
-        File f = new File("./byog/Core/game.txt");
+        File f = new File("./game.txt");
         Game oldGame = null;
         if (f.exists()) {
             try {
@@ -235,6 +243,7 @@ public class Game implements Serializable {
             if (c == ':') {
                 c = input.charAt(index++);
                 if (c == 'Q') {
+                    System.out.println("get to 240");
                     SaveWorld();
                 }
             } else {
