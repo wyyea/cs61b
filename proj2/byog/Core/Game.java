@@ -171,7 +171,7 @@ public class Game implements Serializable {
         yPos = ny;
     }
 
-    private static void drawMenu() {
+    private void drawMenu() {
         StdDraw.setFont(new Font("Monaco", Font.BOLD, 30));
         StdDraw.clear(Color.BLACK);
         StdDraw.setPenColor(Color.WHITE);
@@ -263,7 +263,7 @@ public class Game implements Serializable {
         drawDoorAndPlayer(Map);
     }
 
-    private static class Rect {
+    private class Rect {
         public int x, y;
         public int xlen, ylen;
 
