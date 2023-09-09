@@ -207,7 +207,7 @@ public class Game implements Serializable {
         if (input.charAt(0) == 'N') {
             index = input.indexOf('S');
             String seed = input.substring(1, index);
-            RANDOM = new Random(Integer.parseInt(seed));
+            RANDOM = new Random(Long.parseLong(seed));
             randomWorldGenerate();
         } else if (input.charAt(0) == 'L') {
             game = LoadWorld();
