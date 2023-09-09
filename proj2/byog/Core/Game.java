@@ -15,7 +15,7 @@ import java.io.FileOutputStream;
 
 public class Game implements Serializable {
     private static final long serialVersionUID = 1L;
-    TERenderer ter = new TERenderer();
+    //    TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
@@ -220,8 +220,8 @@ public class Game implements Serializable {
     }
 
     private void stringGameLogic(String input) {
-        ter.initialize(WIDTH, HEIGHT);
-        ter.renderFrame(Map);
+        //        ter.initialize(WIDTH, HEIGHT);
+        //        ter.renderFrame(Map);
         //        StdDraw.pause(500);
 
         int index = 0;
@@ -234,7 +234,7 @@ public class Game implements Serializable {
                 }
             } else {
                 move(Map, c);
-                ter.renderFrame(Map);
+                //                ter.renderFrame(Map);
                 //                StdDraw.pause(500);
             }
         }
