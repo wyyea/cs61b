@@ -212,7 +212,8 @@ public class Game implements Serializable {
         } else if (input.charAt(0) == 'L') {
             game = LoadWorld();
         } else if (input.charAt(0) == 'Q') {
-            return null;
+            game = LoadWorld();
+            return game.Map;
         }
 
         game.stringGameLogic(input.substring(index + 1, input.length()));
