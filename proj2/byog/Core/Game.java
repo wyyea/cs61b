@@ -4,7 +4,8 @@ import byog.SaveDemo.World;
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
-// import edu.princeton.cs.introcs.StdDraw;
+import edu.princeton.cs.introcs.StdDraw;
+import edu.princeton.cs.introcs.StdOut;
 
 import java.awt.*;
 import java.io.*;
@@ -15,28 +16,30 @@ import java.io.FileOutputStream;
 
 public class Game implements Serializable {
     private static final long serialVersionUID = 1L;
-    //    TERenderer ter = new TERenderer();
+    TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
     public static final int windowWidth = 40;
     public static final int windowHeight = 40;
+    public static final int xOff = 10;
+    public static final int yOff = 5;
     public int xPos;
     public int yPos;
     public TETile[][] Map;
     private Random RANDOM;
     private long seed;
 
-    public TETile preObj;
+    private TETile preObj, preCursorObj = null;
 
     public Game() {
-        //        StdDraw.setCanvasSize(windowWidth * 16, windowHeight * 16);
-        //        Font font = new Font("Monaco", Font.BOLD, 20);
-        //        StdDraw.setFont(font);
-        //        StdDraw.setXscale(0, windowWidth);
-        //        StdDraw.setYscale(0, windowHeight);
-        //        StdDraw.clear(Color.BLACK);
-        //        StdDraw.enableDoubleBuffering();
+        StdDraw.setCanvasSize(windowWidth * 16, windowHeight * 16);
+        Font font = new Font("Monaco", Font.BOLD, 20);
+        StdDraw.setFont(font);
+        StdDraw.setXscale(0, windowWidth);
+        StdDraw.setYscale(0, windowHeight);
+        StdDraw.clear(Color.BLACK);
+        StdDraw.enableDoubleBuffering();
         Map = new TETile[WIDTH][HEIGHT];
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) {
@@ -47,71 +50,87 @@ public class Game implements Serializable {
 
     /** Method used for playing a fresh game. The game should start from the main menu. */
     public void playWithKeyboard() {
-        //        drawMenu();
-        //        Game game = this;
-        //        while (true) {
-        //            while (!StdDraw.hasNextKeyTyped()) {}
-        //            char c = Character.toUpperCase(StdDraw.nextKeyTyped());
-        //            if (c != 'N' && c != 'L' && c != 'Q') continue;
-        //            if (c == 'N') {
-        //                getSeed();
-        //                randomWorldGenerate();
-        //            } else if (c == 'L') {
-        //                game = LoadWorld();
-        //                System.out.println("after load: preObj = " + game.preObj);
-        //            } else {
-        //                return;
-        //            }
-        //            break;
-        //        }
-        //        game.gameLogic();
+        drawMenu();
+        Game game = this;
+        while (true) {
+            while (!StdDraw.hasNextKeyTyped()) {}
+            char c = Character.toUpperCase(StdDraw.nextKeyTyped());
+            if (c != 'N' && c != 'L' && c != 'Q') continue;
+            if (c == 'N') {
+                getSeed();
+                randomWorldGenerate();
+            } else if (c == 'L') {
+                game = LoadWorld();
+                if (game == null) {
+                    System.out.println("can not find a saved file");
+                    return;
+                }
+            } else {
+                return;
+            }
+            break;
+        }
+        game.gameLogic();
     }
 
     public void gameLogic() {
-        //        ter.initialize(WIDTH, HEIGHT);
-        //        ter.renderFrame(Map);
-        //
-        //        while (true) {
-        //            while (!StdDraw.hasNextKeyTyped()) {}
-        //            char c = Character.toUpperCase(StdDraw.nextKeyTyped());
-        //            if (c == ':') {
-        //                while (!StdDraw.hasNextKeyTyped()) {}
-        //                c = Character.toUpperCase(StdDraw.nextKeyTyped());
-        //                if (c == 'Q') {
-        //                    SaveWorld();
-        //                    return;
-        //                }
-        //            } else {
-        //                move(Map, c);
-        //                ter.renderFrame(Map);
-        //            }
-        //        }
+        ter.initialize(WIDTH + 2 * xOff, HEIGHT + 2 * yOff, xOff, yOff);
+        StdDraw.setFont(new Font("Monaco", Font.BOLD, 20));
+        ter.renderFrame(Map);
+
+        while (true) {
+            while (!StdDraw.hasNextKeyTyped()) {
+                HeadsUpDisplay();
+            }
+            char c = Character.toUpperCase(StdDraw.nextKeyTyped());
+            if (c == ':') {
+                while (!StdDraw.hasNextKeyTyped()) {
+                    HeadsUpDisplay();
+                }
+                c = Character.toUpperCase(StdDraw.nextKeyTyped());
+                if (c == 'Q') {
+                    SaveWorld();
+                    return;
+                }
+            } else {
+                move(Map, c);
+                StdDraw.setFont(new Font("Monaco", Font.BOLD, 20));
+                ter.renderFrame(Map);
+            }
+        }
+    }
+
+    private void HeadsUpDisplay() {
+        int x = (int) Math.round(StdDraw.mouseX()) - xOff + 3,
+                y = (int) Math.round(StdDraw.mouseY()) - yOff - 1;
+        if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT || Map[x][y] == preCursorObj) return;
+        StdDraw.setFont(new Font("Monaco", Font.BOLD, 20));
+        ter.renderFrame(Map);
+        String text = Map[x][y].description();
+        StdDraw.setFont(new Font("Monaco", Font.BOLD, 30));
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.text(text.length() / 2 + 5, HEIGHT + yOff + 3, text);
+        StdDraw.show();
+        preCursorObj = Map[x][y];
     }
 
     private void SaveWorld() {
         File f = new File("./game.txt");
-        if (!f.exists()) {
-            try {
+        try {
+            if (!f.exists()) {
                 f.createNewFile();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
             }
-        }
-        if (f.exists()) {
-            try {
-                FileOutputStream fs = new FileOutputStream(f);
-                ObjectOutputStream os = new ObjectOutputStream(fs);
-                os.writeObject(this);
-                os.close();
-                fs.close();
-            } catch (FileNotFoundException e) {
-                System.out.println("file not found");
-                System.exit(0);
-            } catch (IOException e) {
-                System.out.println(e);
-                System.exit(0);
-            }
+            FileOutputStream fs = new FileOutputStream(f);
+            ObjectOutputStream os = new ObjectOutputStream(fs);
+            os.writeObject(this);
+            os.close();
+            fs.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("file not found");
+            System.exit(0);
+        } catch (IOException e) {
+            System.out.println(e);
+            System.exit(0);
         }
     }
 
@@ -140,17 +159,28 @@ public class Game implements Serializable {
     }
 
     private void getSeed() {
-        //        seed = 0;
-        //        while (true) {
-        //            while (!StdDraw.hasNextKeyTyped()) {}
-        //            char c = StdDraw.nextKeyTyped();
-        //            if (Character.isDigit(c)) {
-        //                seed = seed * 10 + c - '0';
-        //            } else {
-        //                RANDOM = new Random(seed);
-        //                return;
-        //            }
-        //        }
+        StdDraw.setFont(new Font("Monaco", Font.BOLD, 30));
+        StdDraw.clear(Color.BLACK);
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.text(windowWidth / 2, windowHeight / 2, "Please enter a seed(ended with s):");
+        StdDraw.show();
+
+        seed = 0;
+        while (true) {
+            while (!StdDraw.hasNextKeyTyped()) {}
+            char c = StdDraw.nextKeyTyped();
+            if (Character.isDigit(c)) {
+                seed = seed * 10 + c - '0';
+                StdDraw.clear(Color.BLACK);
+                StdDraw.text(
+                        windowWidth / 2, windowHeight / 2, "Please enter a seed(ended with s):");
+                StdDraw.text(windowWidth / 2, windowHeight / 2 - 3, Long.toString(seed));
+                StdDraw.show();
+            } else {
+                RANDOM = new Random(seed);
+                return;
+            }
+        }
     }
 
     private void move(TETile[][] worldFrame, char c) {
@@ -185,15 +215,15 @@ public class Game implements Serializable {
     }
 
     private void drawMenu() {
-        //        StdDraw.setFont(new Font("Monaco", Font.BOLD, 30));
-        //        StdDraw.clear(Color.BLACK);
-        //        StdDraw.setPenColor(Color.WHITE);
-        //        StdDraw.text(windowWidth / 2, windowHeight / 4 * 3, "CS61B: THE GAME");
-        //        StdDraw.setFont(new Font("Monaco", Font.BOLD, 16));
-        //        StdDraw.text(windowWidth / 2, windowHeight / 3 + 2, "New Game (N)");
-        //        StdDraw.text(windowWidth / 2, windowHeight / 3, "Load Game (L)");
-        //        StdDraw.text(windowWidth / 2, windowHeight / 3 - 2, "Quit (Q)");
-        //        StdDraw.show();
+        StdDraw.setFont(new Font("Monaco", Font.BOLD, 30));
+        StdDraw.clear(Color.BLACK);
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.text(windowWidth / 2, windowHeight / 4 * 3, "CS61B: THE GAME");
+        StdDraw.setFont(new Font("Monaco", Font.BOLD, 16));
+        StdDraw.text(windowWidth / 2, windowHeight / 3 + 2, "New Game (N)");
+        StdDraw.text(windowWidth / 2, windowHeight / 3, "Load Game (L)");
+        StdDraw.text(windowWidth / 2, windowHeight / 3 - 2, "Quit (Q)");
+        StdDraw.show();
     }
 
     /**
@@ -224,6 +254,11 @@ public class Game implements Serializable {
             randomWorldGenerate();
         } else if (input.charAt(0) == 'L') {
             game = LoadWorld();
+            if (game == null) {
+                System.out.println("can not find a saved file");
+                return this.Map;
+            }
+
         } else if (input.charAt(0) == 'Q') {
             return game.Map;
         }
@@ -233,9 +268,9 @@ public class Game implements Serializable {
     }
 
     private void stringGameLogic(String input) {
-        //        ter.initialize(WIDTH, HEIGHT);
-        //        ter.renderFrame(Map);
-        //        StdDraw.pause(500);
+        ter.initialize(WIDTH, HEIGHT);
+        ter.renderFrame(Map);
+        StdDraw.pause(500);
 
         int index = 0;
         while (index < input.length()) {
@@ -248,8 +283,8 @@ public class Game implements Serializable {
                 }
             } else {
                 move(Map, c);
-                //                ter.renderFrame(Map);
-                //                StdDraw.pause(500);
+                ter.renderFrame(Map);
+                StdDraw.pause(500);
             }
         }
     }
