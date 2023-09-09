@@ -38,6 +38,11 @@ public class Game implements Serializable {
         //        StdDraw.clear(Color.BLACK);
         //        StdDraw.enableDoubleBuffering();
         Map = new TETile[WIDTH][HEIGHT];
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                Map[x][y] = Tileset.NOTHING;
+            }
+        }
     }
 
     /** Method used for playing a fresh game. The game should start from the main menu. */
@@ -212,7 +217,6 @@ public class Game implements Serializable {
         } else if (input.charAt(0) == 'L') {
             game = LoadWorld();
         } else if (input.charAt(0) == 'Q') {
-            game = LoadWorld();
             return game.Map;
         }
 
@@ -242,11 +246,6 @@ public class Game implements Serializable {
     }
 
     public void randomWorldGenerate() {
-        for (int x = 0; x < WIDTH; x++) {
-            for (int y = 0; y < HEIGHT; y++) {
-                Map[x][y] = Tileset.NOTHING;
-            }
-        }
 
         Rect preRect = null, curRect;
         for (int t = 0; t < 20; t++) {
