@@ -11,7 +11,7 @@ import org.junit.Assert.*;
 public class Percolation {
 
     private int N;
-    public boolean[][] site;
+    private boolean[][] site;
     /**
      * N * N, row * N + col, col = k % N, row = k / N
      */
