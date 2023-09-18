@@ -13,13 +13,19 @@ public class Percolation {
     private int N;
     private boolean[][] site;
     /**
-     * N * N, row * N + col, col = k % N, row = k / N
+     * index [0, N * N - 1]: row * N + col, col = k % N, row = k / N; index N * N: the top source(in
+     * dupUF, it is the bottom source)
      */
     private WeightedQuickUnionUF UF;
 
+    /** only to find whether a point connected to bottom */
+    private WeightedQuickUnionUF dupUF;
+
+    private boolean isPercolate = false;
+
     /**
      * create N-by-N grid, with all sites initially blocked
-     * 
+     *
      * @param N
      */
     public Percolation(int N) {
@@ -33,30 +39,43 @@ public class Percolation {
                 site[i][j] = false;
             }
         }
-        UF = new WeightedQuickUnionUF(N * N);
+        UF = new WeightedQuickUnionUF(N * N + 1);
+        dupUF = new WeightedQuickUnionUF(N * N + 1);
     }
 
     /**
      * open the site (row, col) if it is not open already
-     * 
+     *
      * @param row, col
      */
     public void open(int row, int col) {
         check_indices(row, col);
-        if (site[row][col])
-            return;
+        if (site[row][col]) return;
         site[row][col] = true;
         if (row > 0 && site[row - 1][col]) {
             UF.union(index_map(row, col), index_map(row - 1, col));
+            dupUF.union(index_map(row, col), index_map(row - 1, col));
         }
-        if (row < N-1 && site[row + 1][col]) {
+        if (row < N - 1 && site[row + 1][col]) {
             UF.union(index_map(row, col), index_map(row + 1, col));
+            dupUF.union(index_map(row, col), index_map(row + 1, col));
         }
         if (col > 0 && site[row][col - 1]) {
             UF.union(index_map(row, col), index_map(row, col - 1));
+            dupUF.union(index_map(row, col), index_map(row, col - 1));
         }
-        if (col < N-1 && site[row][col + 1]) {
+        if (col < N - 1 && site[row][col + 1]) {
             UF.union(index_map(row, col), index_map(row, col + 1));
+            dupUF.union(index_map(row, col), index_map(row, col + 1));
+        }
+        if (row == N - 1) {
+            dupUF.union(index_map(row, col), N * N);
+        } else if (row == 0) {
+            UF.union(index_map(row, col), N * N);
+        }
+        if (UF.connected(index_map(row, col), N * N)
+                && dupUF.connected(index_map(row, col), N * N)) {
+            isPercolate = true;
         }
     }
 
@@ -75,13 +94,8 @@ public class Percolation {
      */
     public boolean isFull(int row, int col) {
         check_indices(row, col);
-        if(!isOpen(row, col))
-            return false;
-        for(int i = 0; i < N; i++){
-            if(isOpen(0, i) && UF.connected(index_map(row, col), index_map(0, i)))
-                return true;
-        }
-        return false;
+        if (!isOpen(row, col)) return false;
+        return UF.connected(index_map(row, col), N * N);
     }
 
     /**
@@ -89,10 +103,7 @@ public class Percolation {
      */
     public int numberOfOpenSites() {
         int cnt = 0;
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < N; j++)
-                if (site[i][j])
-                    cnt++;
+        for (int i = 0; i < N; i++) for (int j = 0; j < N; j++) if (site[i][j]) cnt++;
         return cnt;
     }
 
@@ -100,16 +111,12 @@ public class Percolation {
      * @return whether the system percolates
      */
     public boolean percolates() {
-        for (int i = 0; i < N; i++) {
-            if (isFull(N - 1, i))
-                return true;
-        }
-        return false;
+        return isPercolate;
     }
 
     /**
      * check the (row, col) is in N times N array
-     * 
+     *
      * @param row, col
      */
     private void check_indices(int row, int col) {
@@ -123,16 +130,13 @@ public class Percolation {
 
     /**
      * map the 2D coordinate(row, col) into 1D index
-     * 
+     *
      * @param row, col
      */
     private int index_map(int row, int col) {
         return row * N + col;
     }
 
-    /**
-     * use for unit testing
-     */
-    public static void main(String[] args) {
-    }
+    /** use for unit testing */
+    public static void main(String[] args) {}
 }
