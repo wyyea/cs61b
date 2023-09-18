@@ -76,16 +76,16 @@ public class PercolationStats {
         return mu + 1.96 * sigma / Math.sqrt(Times);
     }
 
-    public static void main(String[] args) {
-        PercolationStats ps = new PercolationStats(1024, 30, new PercolationFactory());
-        System.out.println(
-                "mean: "
-                        + ps.mean()
-                        + "\nstddev: "
-                        + ps.stddev()
-                        + "\nlow: "
-                        + ps.confidenceLow()
-                        + "\nhigh: "
-                        + ps.confidenceHigh());
-    }
+    //    public static void main(String[] args) {
+    //        PercolationStats ps = new PercolationStats(1024, 30, new PercolationFactory());
+    //        System.out.println(
+    //                "mean: "
+    //                        + ps.mean()
+    //                        + "\nstddev: "
+    //                        + ps.stddev()
+    //                        + "\nlow: "
+    //                        + ps.confidenceLow()
+    //                        + "\nhigh: "
+    //                        + ps.confidenceHigh());
+    //    }
 }
