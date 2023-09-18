@@ -1,7 +1,5 @@
 package hw2;
 
-import java.util.random.RandomGenerator;
-
 import edu.princeton.cs.introcs.StdRandom;
 import edu.princeton.cs.introcs.StdStats;
 
