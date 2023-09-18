@@ -70,7 +70,8 @@ public class Percolation {
         }
         if (row == N - 1) {
             dupUF.union(index_map(row, col), N * N);
-        } else if (row == 0) {
+        }
+        if (row == 0) {
             UF.union(index_map(row, col), N * N);
         }
         if (UF.connected(index_map(row, col), N * N)
