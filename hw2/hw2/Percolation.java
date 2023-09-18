@@ -22,6 +22,7 @@ public class Percolation {
     private WeightedQuickUnionUF dupUF;
 
     private boolean isPercolate = false;
+    private int numOfOpen = 0;
 
     /**
      * create N-by-N grid, with all sites initially blocked
@@ -36,7 +37,7 @@ public class Percolation {
         site = new boolean[N][N];
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                site[i][j] = false;
+                assert (site[i][j] == false);
             }
         }
         UF = new WeightedQuickUnionUF(N * N + 1);
@@ -52,6 +53,7 @@ public class Percolation {
         check_indices(row, col);
         if (site[row][col]) return;
         site[row][col] = true;
+        numOfOpen++;
         if (row > 0 && site[row - 1][col]) {
             UF.union(index_map(row, col), index_map(row - 1, col));
             dupUF.union(index_map(row, col), index_map(row - 1, col));
@@ -103,9 +105,7 @@ public class Percolation {
      * @return number of open sites
      */
     public int numberOfOpenSites() {
-        int cnt = 0;
-        for (int i = 0; i < N; i++) for (int j = 0; j < N; j++) if (site[i][j]) cnt++;
-        return cnt;
+        return numOfOpen;
     }
 
     /**

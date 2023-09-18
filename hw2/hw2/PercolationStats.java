@@ -13,7 +13,7 @@ public class PercolationStats {
 
     /**
      * perform T independent experiments on an N-by-N grid
-     * 
+     *
      * @param N, T, pf
      */
     public PercolationStats(int N, int T, PercolationFactory pf) {
@@ -38,11 +38,9 @@ public class PercolationStats {
      * @return sample mean of percolation threshold
      */
     public double mean() {
-        if (Mean != -1)
-            return Mean;
+        if (Mean != -1) return Mean;
         double sum = 0;
-        for (double s : stats)
-            sum += s;
+        for (double s : stats) sum += s;
         Mean = sum / Times;
         return Mean;
     }
@@ -51,14 +49,11 @@ public class PercolationStats {
      * @return sample standard deviation of percolation threshold
      */
     public double stddev() {
-        if (Times == 1)
-            return Double.NaN;
-        if (Stddev != -1)
-            return Stddev;
+        if (Times == 1) return Double.NaN;
+        if (Stddev != -1) return Stddev;
         double sumOfStats = 0;
         double m = mean();
-        for (double s : stats)
-            sumOfStats += (s - m) * (s - m);
+        for (double s : stats) sumOfStats += (s - m) * (s - m);
         Stddev = Math.sqrt(sumOfStats / (Times - 1));
         return Stddev;
     }
@@ -67,8 +62,7 @@ public class PercolationStats {
      * @return low endpoint of 95% confidence interval
      */
     public double confidenceLow() {
-        if (ConfidenceLow != -1)
-            return ConfidenceLow;
+        if (ConfidenceLow != -1) return ConfidenceLow;
         double mu = mean(), sigma = stddev();
         return mu - 1.96 * sigma / Math.sqrt(Times);
     }
@@ -77,14 +71,21 @@ public class PercolationStats {
      * @return high endpoint of 95% confidence interval
      */
     public double confidenceHigh() {
-        if (ConfidenceHigh != -1)
-            return ConfidenceHigh;
+        if (ConfidenceHigh != -1) return ConfidenceHigh;
         double mu = mean(), sigma = stddev();
         return mu + 1.96 * sigma / Math.sqrt(Times);
     }
 
-//    public static void main(String[] args){
-//        PercolationStats ps = new PercolationStats(20, 30, new PercolationFactory());
-//        System.out.println("mean: " + ps.mean() + "\nstddev: " + ps.stddev() + "\nlow: " + ps.confidenceLow() + "\nhigh: " + ps.confidenceHigh());
-//    }
+    public static void main(String[] args) {
+        PercolationStats ps = new PercolationStats(1024, 30, new PercolationFactory());
+        System.out.println(
+                "mean: "
+                        + ps.mean()
+                        + "\nstddev: "
+                        + ps.stddev()
+                        + "\nlow: "
+                        + ps.confidenceLow()
+                        + "\nhigh: "
+                        + ps.confidenceHigh());
+    }
 }
