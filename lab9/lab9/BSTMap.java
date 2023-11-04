@@ -141,8 +141,8 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     } else if (p.right == null) {
       return p.left;
     }
-    Node mid = p;
-    Node cur_mid = p.right;
+    Node mid = p.right;
+    Node cur_mid = p;
     while (mid.left != null) {
       cur_mid = mid;
       mid = mid.left;
