@@ -132,34 +132,25 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     return keySet(root);
   }
 
-  /** get the predecessor or successor of p, move it to the place of p, asserts p is not null */
+  /** get the predecessor or successor of p, move it to the place of p */
   public Node getMid(Node p) {
-    Node mid = null;
-    Node cur_mid = null;
-    Node aft_mid = null;
-    if (p.left != null) {
-      mid = p.left;
-      cur_mid = p;
-      while (mid.right != null) {
-        cur_mid = mid;
-        mid = mid.right;
-      }
-      aft_mid = mid.left;
-    } else if (p.right != null) {
-      mid = p.right;
-      cur_mid = p;
-      while (mid.left != null) {
-        cur_mid = mid;
-        mid = mid.left;
-      }
-      aft_mid = mid.right;
-    } else {
-      return mid;
+    if (p.left == null && p.right == null) {
+      return null;
+    } else if (p.left == null) {
+      return p.right;
+    } else if (p.right == null) {
+      return p.left;
+    }
+    Node mid = p;
+    Node cur_mid = p.right;
+    while (mid.left != null) {
+      cur_mid = mid;
+      mid = mid.left;
     }
     if (cur_mid.left == mid) {
-      cur_mid.left = aft_mid;
+      cur_mid.left = mid.right;
     } else {
-      cur_mid.right = aft_mid;
+      cur_mid.right = mid.right;
     }
     mid.left = p.left;
     mid.right = p.right;
