@@ -180,6 +180,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     } else {
       parent.right = mid;
     }
+    size--;
     return p.value;
   }
 
@@ -210,6 +211,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     } else {
       parent.right = mid;
     }
+    size--;
     return p.value;
   }
 
