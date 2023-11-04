@@ -136,6 +136,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
   public Node getMid(Node p) {
     Node mid = null;
     Node cur_mid = null;
+    Node aft_mid = null;
     if (p.left != null) {
       mid = p.left;
       cur_mid = p;
@@ -143,6 +144,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         cur_mid = mid;
         mid = mid.right;
       }
+      aft_mid = mid.left;
     } else if (p.right != null) {
       mid = p.right;
       cur_mid = p;
@@ -150,13 +152,14 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         cur_mid = mid;
         mid = mid.left;
       }
+      aft_mid = mid.right;
     } else {
       return mid;
     }
     if (cur_mid.left == mid) {
-      cur_mid.left = null;
+      cur_mid.left = aft_mid;
     } else {
-      cur_mid.right = null;
+      cur_mid.right = aft_mid;
     }
     mid.left = p.left;
     mid.right = p.right;
