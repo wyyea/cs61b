@@ -17,7 +17,17 @@ public class RadixSort {
      */
     public static String[] sort(String[] asciis) {
         // TODO: Implement LSD Sort
-        return null;
+        
+        int max_len = 0;
+        for (String str: asciis)
+            max_len = max_len > str.length() ? max_len : str.length();
+        
+        String[] sorted = asciis.clone();
+        for (int i = max_len - 1; i >= 0; i--){
+            sortHelperLSD(sorted, i);
+        }
+        
+        return sorted;
     }
 
     /**
@@ -28,6 +38,33 @@ public class RadixSort {
      */
     private static void sortHelperLSD(String[] asciis, int index) {
         // Optional LSD helper method for required LSD radix sort
+        
+        int[] counts = new int[260];
+        int[] values = new int[asciis.length];
+        for (int i = 0; i < asciis.length; i++){
+            String str = asciis[i];
+            values[i] = index < str.length() ? str.charAt(index) + 1 : 0;            
+            counts[values[i]]++;
+        }
+
+        int pos = 0;
+        int[] starts = new int[260];
+        for (int i = 0; i < 260; i++){
+            starts[i] = pos; 
+            pos += counts[i];
+        }
+
+        String[] sorted = new String[asciis.length];
+        for (int i = 0; i < asciis.length; i++){
+            pos = starts[values[i]];
+            sorted[pos] = asciis[i]; // copy the string or not ?
+            starts[values[i]]++;
+        }
+
+        for (int i = 0; i < asciis.length; i++){
+            asciis[i] = sorted[i];
+        }
+
         return;
     }
 
@@ -44,5 +81,16 @@ public class RadixSort {
     private static void sortHelperMSD(String[] asciis, int start, int end, int index) {
         // Optional MSD helper method for optional MSD radix sort
         return;
+    }
+    
+    public static void main(String[] args) {
+        String[] arr = new String[]{"qlhtglq", "ahglah", "ahthewn", "ohwenkfn", "jclhlsfj"};
+        for (String str: arr)
+            System.out.print(str + ", ");
+        System.out.println("");
+        arr = sort(arr);
+        for (String str: arr)
+            System.out.print(str + ", ");
+        System.out.println("");
     }
 }
