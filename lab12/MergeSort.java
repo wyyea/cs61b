@@ -35,7 +35,13 @@ public class MergeSort {
     private static <Item extends Comparable> Queue<Queue<Item>>
             makeSingleItemQueues(Queue<Item> items) {
         // Your code here!
-        return null;
+        Queue<Queue<Item>> singleItemQueue = new Queue<Queue<Item>>();
+        for (Item item: items){
+            Queue<Item> singleItem = new Queue<Item>();
+            singleItem.enqueue(item);
+            singleItemQueue.enqueue(singleItem);
+        }
+        return singleItemQueue;
     }
 
     /**
@@ -54,13 +60,42 @@ public class MergeSort {
     private static <Item extends Comparable> Queue<Item> mergeSortedQueues(
             Queue<Item> q1, Queue<Item> q2) {
         // Your code here!
-        return null;
+        Queue<Item> sortedQueue = new Queue<Item>();
+        while(!q1.isEmpty() || !q2.isEmpty()){
+            sortedQueue.enqueue(getMin(q1, q2));
+        }
+        return sortedQueue;
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> mergeSort(
             Queue<Item> items) {
         // Your code here!
-        return items;
+        if (items.size() <= 1)
+            return items;
+        else {
+            int half = items.size() / 2;
+            Queue<Item> firstHalf = new Queue<Item>();
+            for (int i = 1; i <= half; i++){
+                firstHalf.enqueue(items.peek());
+                items.dequeue();
+            }
+            Queue<Item> lastHalf = items;
+            firstHalf = mergeSort(firstHalf);
+            lastHalf = mergeSort(lastHalf);
+            return mergeSortedQueues(firstHalf, lastHalf);
+        }
+    }
+
+    public static void main(String[] args){
+        Queue<Integer> numbers = new Queue<Integer>();
+        numbers.enqueue(3);
+        numbers.enqueue(4);
+        numbers.enqueue(1);
+        numbers.enqueue(2);
+        numbers.enqueue(10);
+        System.out.println(numbers.toString());
+        Queue<Integer> sorted_numbers = mergeSort(numbers);
+        System.out.println(sorted_numbers.toString());
     }
 }
