@@ -74,13 +74,16 @@ public class MergeSort {
         if (items.size() <= 1)
             return items;
         else {
-            int half = items.size() / 2;
+            int half = items.size() / 2, idx = 1;
             Queue<Item> firstHalf = new Queue<Item>();
-            for (int i = 1; i <= half; i++){
-                firstHalf.enqueue(items.peek());
-                items.dequeue();
+            Queue<Item> lastHalf = new Queue<Item>();
+            for (Item item: items){
+                if(idx <= half)
+                    firstHalf.enqueue(item);
+                else
+                    lastHalf.enqueue(item);
+                idx++;
             }
-            Queue<Item> lastHalf = items;
             firstHalf = mergeSort(firstHalf);
             lastHalf = mergeSort(lastHalf);
             return mergeSortedQueues(firstHalf, lastHalf);
