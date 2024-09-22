@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Solver {
-    public class pair{
+    private class pair{
         public WorldState worldstate;
         public int value;
         public pair(WorldState w, int v){
@@ -22,9 +22,9 @@ public class Solver {
     private int moves;
     private Vector<WorldState> solution;
     private Set<WorldState> reached;
-    HashMap<WorldState, Integer> hurMap;
-    HashMap<WorldState, Integer> disMap;
-    HashMap<WorldState, WorldState> edgeTo;
+    private HashMap<WorldState, Integer> hurMap;
+    private HashMap<WorldState, Integer> disMap;
+    private HashMap<WorldState, WorldState> edgeTo;
 
     public Solver(WorldState initial){
         moves = 0;

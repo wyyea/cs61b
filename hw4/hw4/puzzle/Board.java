@@ -89,9 +89,13 @@ public class Board implements WorldState{
     public int estimatedDistanceToGoal(){ return manhattan(); }
 
     public boolean equals(Object y){
+        if(!(y instanceof Board))
+            return false;
+
         Board yboard = (Board) y;
         if(yboard.size() != N)
             return false;
+
         for (int i = 0; i < N; i++)
             for (int j = 0; j < N; j++)
                 if(yboard.tileAt(i, j) != tiles[i][j])
@@ -113,5 +117,9 @@ public class Board implements WorldState{
         }
         s.append("\n");
         return s.toString();
+    }
+
+    public int hashCode(){
+        return tiles.hashCode();
     }
 }
