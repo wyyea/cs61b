@@ -1,5 +1,5 @@
 package hw4.puzzle;
-import java.util.PriorityQueue;
+import edu.princeton.cs.algs4.MinPQ;
 import java.util.Vector;
 
 import static org.junit.Assert.assertTrue;
@@ -43,11 +43,11 @@ public class Solver {
         disMap.put(initial, 0);
         edgeTo.put(initial, initial);
 
-        PriorityQueue<pair> q = new PriorityQueue<>(new custom_comparator());
-        q.add(new pair(initial, 0)); // 总是第一个取出，设置为0也可
+        MinPQ<pair> q = new MinPQ<>(new custom_comparator());
+        q.insert(new pair(initial, 0)); // 总是第一个取出，设置为0也可
 
         while(!q.isEmpty()){
-            pair tmpPair = q.poll();
+            pair tmpPair = q.delMin();
             WorldState tmpState = tmpPair.worldstate;
 
             if(reached.contains(tmpState))
@@ -86,7 +86,7 @@ public class Solver {
                 // the dis should be updated or never be set
                 disMap.put(nextState, dis);
                 edgeTo.put(nextState, tmpState);
-                q.add(new pair(nextState, dis + hur));
+                q.insert(new pair(nextState, dis + hur));
             }
         }
     }
