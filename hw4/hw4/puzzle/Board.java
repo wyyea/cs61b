@@ -90,6 +90,8 @@ public class Board implements WorldState{
 
     public boolean equals(Object y){
         Board yboard = (Board) y;
+        if(yboard.size() != N)
+            return false;
         for (int i = 0; i < N; i++)
             for (int j = 0; j < N; j++)
                 if(yboard.tileAt(i, j) != tiles[i][j])

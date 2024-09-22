@@ -57,8 +57,7 @@ public class Solver {
                 moves = disMap.get(tmpState);
                 WorldState prevState = edgeTo.get(tmpState);
                 while(tmpState != prevState){
-                    // solution.add(0, tmpState);
-                    System.out.println(tmpState.toString());
+                    solution.add(0, tmpState);
                     tmpState = prevState;
                     prevState = edgeTo.get(prevState);
                 } 
