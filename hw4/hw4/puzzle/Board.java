@@ -66,10 +66,8 @@ public class Board implements WorldState{
         int error = 0, correctTile = 1;
         for(int i = 0; i < N; i++)
             for(int j = 0; j < N; j++, correctTile++)
-                if(tiles[i][j] != correctTile)
+                if(tiles[i][j] != 0 && tiles[i][j] != correctTile)
                     error++;
-        if(tiles[N-1][N-1] == 0)
-            error--;
         return error;
     }
 
